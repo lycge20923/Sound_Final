@@ -2,6 +2,7 @@ Heart heart; // Heart 物件 (控制 redHeart)
 enum State {
   red, blue
 }
+
 Platform platform; // 平台管控
 
 float[] rectPosition;
