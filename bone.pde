@@ -5,6 +5,8 @@ int height = 500;
 //每一個陣列分別存：所有Bones出來時間、位置x、位置y、射出向量x、射出向量y
 float[][] set = new float[100][5]; 
 
+//test
+
 class Bones{
   float time, pos_x, pos_y, move_x, move_y;
 
