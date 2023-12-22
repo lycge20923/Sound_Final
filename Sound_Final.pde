@@ -1,9 +1,27 @@
+import oscP5.*;
+import netP5.*;
+
+OscP5 oscp5;
+
+void oscEvent(OscMessage myOscMessage) {
+  if(myOscMessage.checkAddrPattern("/duck") == true) {
+    int value = myOscMessage.get(0).intValue();
+    if(value == 1) {
+      heart.HeartChange(State.red);
+    }
+    else if(value == 2) {
+      heart.HeartChange(State.blue);
+    }
+  }
+}
+
 Heart heart; // Heart 物件 (控制 redHeart)
 enum State {
   red, blue
 }
 
 Platform platform; // 平台管控
+Arrow arrow;
 
 float[] rectPosition;
 
@@ -13,6 +31,7 @@ boolean upKeyPressed = false;
 boolean downKeyPressed = false;
 
 void setup() {
+  oscp5 = new OscP5(this, 9999);
   // 背景
   size(600, 500);
   background(0);
@@ -22,6 +41,7 @@ void setup() {
   
   heart = new Heart();
   platform = new Platform(new float[]{rectPosition[0], rectPosition[0] + rectPosition[2], rectPosition[1], rectPosition[1] + rectPosition[3]});
+  arrow = new Arrow();
 }
 
 static int i = 0;
@@ -35,6 +55,9 @@ void draw() {
   if(i % 60 == 0) platform.create(rectPosition[0] + rectPosition[2], rectPosition[1] + rectPosition[3] - 100, -2, 50);
   if(i % 60 == 0) platform.create(rectPosition[0] - 50, rectPosition[1] + rectPosition[3] - 200, 2, 50);
   i++;
+
+  arrow.draw();
+  if (frameCount % 50 == 0) arrow.create(0, 0, 2, 3, 1, 50, int(random(4)));
   
   // 白框(設定填充色為透明，邊框色為白色)
   fill(color(255, 255, 255, 0));
