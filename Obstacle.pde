@@ -28,6 +28,9 @@ class Obstacles {
     this.next += 1;
     if (num % 60 == 0) this.create(this.whiteBoneTall, this.whiteBoneTall.width, 60, 1);
     
+
+
+    
     // random bone height
     // if (this.next % 5 == 0) {
     //   int rand = round(random(1,2));
