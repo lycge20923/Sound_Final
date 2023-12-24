@@ -1,4 +1,4 @@
-#N canvas 1 38 1422 857 12;
+#N canvas 2328 79 1422 857 12;
 #X obj 228 226 unpack;
 #X floatatom 226 258 5 0 0 0 - - - 0;
 #X floatatom 272 258 5 0 0 0 - - - 0;
@@ -124,6 +124,16 @@
 #X obj 1115 909 sel 0;
 #X obj 1145 938 bng 19 250 50 0 signal_Bone2 empty empty 0 -10 0 12 #fcfcfc #000000 #000000;
 #X obj 854 692 cyclone/seq Buzzy_DDown.mid;
+#X obj 452 871 netsend -u -b;
+#X obj 473 826 packOSC;
+#X msg 341 822 disconnect;
+#X obj 546 661 bng 19 250 50 0 empty signal_Bone0 empty 0 -10 0 12 #fcfcfc #000000 #000000;
+#X obj 546 707 bng 19 250 50 0 empty signal_Bone1 empty 0 -10 0 12 #fcfcfc #000000 #000000;
+#X msg 546 685 send /bone 0;
+#X msg 546 735 send /bone 1;
+#X obj 549 763 bng 19 250 50 0 empty signal_Bone2 empty 0 -10 0 12 #fcfcfc #000000 #000000;
+#X msg 549 791 send /bone 2;
+#X obj 364 650 r connect_to_processing;
 #X connect 0 0 1 0;
 #X connect 0 1 2 0;
 #X connect 1 0 13 0;
@@ -283,3 +293,12 @@
 #X connect 121 0 124 0;
 #X connect 122 1 123 0;
 #X connect 124 0 112 0;
+#X connect 126 0 125 0;
+#X connect 127 0 125 0;
+#X connect 128 0 130 0;
+#X connect 129 0 131 0;
+#X connect 130 0 126 0;
+#X connect 131 0 126 0;
+#X connect 132 0 133 0;
+#X connect 133 0 126 0;
+#X connect 134 0 125 0;
