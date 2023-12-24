@@ -25,7 +25,7 @@ class Obstacles {
 
   void create(float h, int mode) {
     // obstacles.add(new obs(bone, w, h));
-    customBones.add(new customBone(h, mode));
+    this.customBones.add(new customBone(h, mode));
   }
 
   void getFreq(int f) {
@@ -48,16 +48,14 @@ class Obstacles {
     //   // this.count += 1;
     // }
     
-    for (int i = customBones.size() - 1; i >=0 ; i--) {
-      customBone o = customBones.get(i);
+    for (int i = this.customBones.size() - 1; i >=0 ; i--) {
+      customBone o = this.customBones.get(i);
       if (o.xleft > width || o.xright < 0) {
         toRemove.add(i);
       }
       o.move();
-      o.show(boundary, i);
-      // println(o.h);
+      o.show(boundary);
     }
-    // println(this.customBones.size());
     // remove exceed boundary obstacles
     for(int idx : toRemove) {
       this.customBones.remove(idx);
@@ -72,7 +70,6 @@ class customBone {
   PImage boneWhiteBot, boneWhiteTop, boneBlueBot, boneBlueTop;
   
   // 建構子
-
   public customBone(float h, int mode) {
     this.boneWhiteBot = loadImage("./images/bone_white_bottom.png");
     this.boneWhiteTop = loadImage("./images/bone_white_top.png");
@@ -94,12 +91,12 @@ class customBone {
   }
 
   // 顯示
-  void show(float[] boundary, int i) {
+  void show(float[] boundary) {
     // mode 1 : white, mode 2 : blue
     float bonePos = (this.xright > width - 10) ? this.y + this.h / 2 : this.y;
-    rectMode(CENTER);
 
-    if (this.mode == 1){
+    if (this.mode == 1 && this.h > 0){
+      rectMode(CENTER);
       fill(color(255, 255, 255));
       rect(this.xright, bonePos, 6, this.h);
       image(this.boneWhiteBot, this.xright, bonePos + this.h / 2);
@@ -113,6 +110,7 @@ class customBone {
       // image(this.boneWhiteTop, this.xright, this.upy - reverseH / 2);
     }
     else if (this.mode == 2) {
+      rectMode(CENTER);
       fill(color(64, 254, 254));
       rect(this.xright, bonePos, 6, this.h);
       image(this.boneBlueBot, this.xright, bonePos + this.h / 2);
