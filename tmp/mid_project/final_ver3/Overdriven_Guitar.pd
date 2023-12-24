@@ -163,9 +163,9 @@
 #X msg 540 572 send /track/2/elev \$1;
 #X obj 540 666 netsend -u -b;
 #X obj 539 621 packOSC;
-#X obj 368 571 r connect_to_panoromix;
 #X obj 368 511 expr ($f1-70)/16*60;
 #X obj 322 598 bng 19 250 50 0 empty empty empty 0 -10 0 12 #fcfcfc #000000 #000000;
+#X obj 369 570 r connect_to_panoramix;
 #X connect 0 0 49 0;
 #X connect 1 0 49 0;
 #X connect 7 0 48 0;
@@ -238,7 +238,7 @@
 #X connect 53 0 56 0;
 #X connect 54 0 55 0;
 #X connect 58 0 59 0;
-#X connect 58 0 71 0;
+#X connect 58 0 70 0;
 #X connect 59 0 60 0;
 #X connect 60 0 57 0;
 #X connect 61 0 57 0;
@@ -249,7 +249,7 @@
 #X connect 66 0 69 0;
 #X connect 67 0 69 0;
 #X connect 69 0 68 0;
-#X connect 70 0 68 0;
-#X connect 71 0 67 0;
-#X connect 71 0 72 0;
-#X connect 72 0 66 0;
+#X connect 70 0 67 0;
+#X connect 70 0 71 0;
+#X connect 71 0 66 0;
+#X connect 72 0 68 0;
