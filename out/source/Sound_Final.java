@@ -70,7 +70,7 @@ public void oscEvent(OscMessage myOscMessage) {
   }
   if(myOscMessage.checkAddrPattern("/sw3") == true) {
     float sw3 = myOscMessage.get(0).intValue();
-    arrowSize = sw3 * sw3 / 10000.0f;
+    arrowSize = sw3 * sw3 / 10000.0f * 1.2f;
   }
 }
 
@@ -118,7 +118,7 @@ public void draw() {
 
   arrow.draw();
   if (arrowAttack) {
-    arrow.create(0, 0, 2, 5, arrowSize, 50, arrowSide);
+    arrow.create(0, 0, 2, 3, arrowSize, 50, arrowSide); //x,y,角度,速度,大小,離框距離,發射方向
     arrowAttack = false;
   }
   
@@ -407,13 +407,13 @@ class arr{
   
     public void update() {
         if(this.r < radians(360)){
-            if(this.r < radians(20)) this.arrowColor = color(0,255,128);
+            if(this.r < radians(90)) this.arrowColor = color(0,255,128);
             else this.arrowColor = color(255,255,255);
             this.angle += 0.3f;
             this.r += 0.3f;
         }
         else{  
-            this.speed += 0.1f;
+            this.speed += 0.3f;
             this.xSpeed = speed * cos(angle);
             this.ySpeed = speed * sin(angle);
             this.x += this.xSpeed;

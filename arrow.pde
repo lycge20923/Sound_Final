@@ -67,7 +67,7 @@ class arr{
             this.r += 0.3;
         }
         else{  
-            this.speed += 0.1;
+            this.speed += 0.3;
             this.xSpeed = speed * cos(angle);
             this.ySpeed = speed * sin(angle);
             this.x += this.xSpeed;
