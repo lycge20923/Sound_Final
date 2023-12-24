@@ -22,15 +22,16 @@ class Arrow {
 
     // 生成方框外的座標
     PVector createOutsidePoint(float[] rectPosition, float dist, int side) {
+        int arrow_create_flex = 100;
         switch (side) {
             case 0:
-                return new PVector(random(rectPosition[0], rectPosition[0]+ rectPosition[2]), rectPosition[1] - dist);
+                return new PVector(random(rectPosition[0] + arrow_create_flex, rectPosition[0]+ rectPosition[2] - arrow_create_flex), rectPosition[1] - dist);
             case 1:
-                return new PVector(rectPosition[0]+ rectPosition[2] + dist, random(rectPosition[1], rectPosition[1]+ rectPosition[3]));
+                return new PVector(rectPosition[0]+ rectPosition[2] + dist, random(rectPosition[1] + arrow_create_flex, rectPosition[1]+ rectPosition[3] - arrow_create_flex));
             case 2:
-                return new PVector(random(rectPosition[0], rectPosition[0]+ rectPosition[2]), rectPosition[1]+ rectPosition[3]+ dist);
+                return new PVector(random(rectPosition[0] + arrow_create_flex, rectPosition[0]+ rectPosition[2] - arrow_create_flex), rectPosition[1]+ rectPosition[3]+ dist);
             case 3:
-                return new PVector(rectPosition[0] - dist, random(rectPosition[1], rectPosition[1]+ rectPosition[3]));
+                return new PVector(rectPosition[0] - dist, random(rectPosition[1] + arrow_create_flex, rectPosition[1]+ rectPosition[3] - arrow_create_flex));
             default:
                 return new PVector(0, 0);
         }
