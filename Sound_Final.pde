@@ -72,11 +72,12 @@ void oscEvent(OscMessage myOscMessage) {
         arrowSide = 3;
         break;
       case 4:
-        //arrowSide = (random(2) < 1) ? 1 : 3;
-        arrowSide = int(random(4));
+        arrowSide = (random(2) < 1) ? 1 : 3;
+        //arrowSide = int(random(4));
         break;
       case 5:
-        arrowSide = int(random(4));
+        //arrowSide = int(random(4));
+        arrowSide = (random(2) < 1) ? 0 : 2;
         break;
       default:
         arrowSide = int(random(4));
