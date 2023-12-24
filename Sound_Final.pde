@@ -1,3 +1,35 @@
+import oscP5.*;
+import netP5.*;
+
+OscP5 oscp5;
+
+void oscEvent(OscMessage myOscMessage) {
+  if(myOscMessage.checkAddrPattern("/duck") == true) {
+    int value = myOscMessage.get(0).intValue();
+    if(value == 1) {
+      heart.HeartChange(State.red);
+    }
+    else if(value == 2) {
+      heart.HeartChange(State.blue);
+    }
+  }
+  if(myOscMessage.checkAddrPattern("/gb_stop") == true){
+     gasterBlasterManager.attackMode(NONE);
+     gasterBlasterManager.startTime(Integer.MAX_VALUE);
+     gasterBlasterManager.attackCount = 0;
+  }
+  if(myOscMessage.checkAddrPattern("/gb_start") == true){
+     gasterBlasterManager.attackMode(NONE);
+     gasterBlasterManager.startTime(i);
+  }
+  if(myOscMessage.checkAddrPattern("/gb_lf") == true){
+     gasterBlasterManager.attackMode(LEFTRIGHT);
+  }
+  if(myOscMessage.checkAddrPattern("/gb_rd") == true){
+     gasterBlasterManager.attackMode(RANDOM);
+  }
+}
+
 Heart heart; // Heart 物件 (控制 redHeart)
 enum State {
   red, blue
@@ -13,13 +45,14 @@ boolean upKeyPressed = false;
 boolean downKeyPressed = false;
 
 void setup() {
+  oscp5 = new OscP5(this, 9999);
   // 背景
   size(600, 500);
   background(0);
   
   // 白框位址、大小 [左上x, 左上y, 寬, 高]
   rectPosition = new float[]{100, 100, width-200, height-200};
-  
+  gasterBlasterManager = new GasterBlasterManager();
   heart = new Heart();
   platform = new Platform(new float[]{rectPosition[0], rectPosition[0] + rectPosition[2], rectPosition[1], rectPosition[1] + rectPosition[3]});
 }
@@ -35,6 +68,7 @@ void draw() {
   if(i % 60 == 0) platform.create(rectPosition[0] + rectPosition[2], rectPosition[1] + rectPosition[3] - 100, -2, 50);
   if(i % 60 == 0) platform.create(rectPosition[0] - 50, rectPosition[1] + rectPosition[3] - 200, 2, 50);
   i++;
+  gasterBlasterManager.draw();
   
   // 白框(設定填充色為透明，邊框色為白色)
   fill(color(255, 255, 255, 0));
