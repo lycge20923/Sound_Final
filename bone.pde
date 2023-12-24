@@ -3,54 +3,90 @@ int width = 600;
 int height = 500;
 
 //每一個陣列分別存：所有Bones出來時間、位置x、位置y、射出向量x、射出向量y
-float[][] set = new float[100][5]; 
+float[][][] set = new float[3][1000][6]; 
+
+//test
 
 class Bones{
   float time, pos_x, pos_y, move_x, move_y;
 
   // 出來時間做Array存取：showtimes
-  // bones建立（會變動的）呈現物件array：bones
-  ArrayList<Float> showtimes = new ArrayList<Float>(); 
-  ArrayList<bone> bones = new ArrayList<bone>();
+  // bones建立（會變動的）呈現物件array：bones 
+  ArrayList<bone> bones0 = new ArrayList<bone>();
+  ArrayList<bone> bones1 = new ArrayList<bone>();
+  ArrayList<bone> bones2 = new ArrayList<bone>();
+  int[] count;
+  int punch_lay;
 
-  int count;
   void setup(){
-
-    // 初始化 
-    set[0] = new float[]{20,0,0,4,6};
-    set[1] = new float[]{23,100,0,4,3};
-    set[2] = new float[]{26,70,90,7,5};
-    set[3] = new float[]{29,300,400,6,6};
-    set[4] = new float[]{32,500,5,4,6};
-    set[5] = new float[]{35,500,700,-4,-6};
-    set[6] = new float[]{38,400,30,4,6};
-    set[7] = new float[]{41,600,500,-4,-6};
-    set[8] = new float[]{44,30,40,4,6};
-    set[9] = new float[]{47,64,43,4,6};
-    for(int i =0;i<set.length;i++){
-      this.showtimes.add(set[i][0]);
+    for(int i=0;i<200;i++){
+      if(i<12){set[0][i] = new float[]{0,100,10,1,150,1};}
+      else if(i<31){set[0][i] = new float[]{200,0,1,10,150,1};}
+      else if(i<42){set[0][i] = new float[]{0,400,10,-1,150,1};}
+      else if(i<52){set[0][i] = new float[]{400,500,-1,-10,150,1};}
+      else if(i<65){set[0][i] = new float[]{0,0,6,5,150,2};}
+      else if(i<84){set[0][i] = new float[]{0,0,3,-5,150,2};}
+      else if(i<95){set[0][i] = new float[]{600,500,-6,-5,150,2};}
+      else /*if(i<103)*/{set[0][i] = new float[]{600,0,-3,5,150,2};}
+    for(int j=0;j<200;j++){
+      if(j<10){set[1][j] = new float[]{600,400,-10,-1,150,1};}
+      else if(j<23){set[1][j] = new float[]{600,100,-10,1,150,1};}
+      else if(j<33){set[1][j] = new float[]{0,500,6,-5,150,2};}
+      else /*if(j<46)*/{set[1][j] = new float[]{600,0,-6,5,150,2};}
     }
-    this.count = 0;
+    for(int k=0;k<200;k++){
+      if(k<5){set[2][k] = new float[]{0,200,3,2.5,100,100};}
+      else if(k<12){set[2][k] = new float[]{600,300,-3,2.5,100,100};}
+      else if(k<17){set[2][k] = new float[]{0,300,3,2.5,100,100};}
+      else /*if(k<22)*/{set[2][k] = new float[]{600,300,-3,2.5,100,100};}
+    }
+    this.count = new int[]{0,0,0};
+    this.punch_lay = 0;
+  }
+}
+
+  void createBone(int i){
+    int index = this.count[i];
+    bone b = new bone(set[i][index][0],set[i][index][1], set[i][index][2], set[i][index][3], set[i][index][4],set[i][index][5]);
+    if(i==0){
+      this.bones0.add(b);
+    }
+    else if(i==1){
+      this.bones1.add(b);
+    }
+    else{
+      this.bones2.add(b);
+    }
+    this.count[i]++;
+    this.punch_lay = 0;
   }
 
-  void draw(int i){
-    //時間吻合，抓新的bone物件進入宣告
-    if(float(i)==this.showtimes.get(this.count)){ //如果時間吻合
-      int index = this.count;
-      bone b = new bone(set[index][1],set[index][2], set[index][3], set[index][4], 100);
-      this.bones.add(b);
-      this.count++;
-    }
-
-    //呈現所有應該呈現的bone
-    if(this.bones.size()>0){
-      for (int j=0; j < this.bones.size();j++){
-        this.bones.get(j).draw();
-        if(this.bones.get(j).removebone()){
-          this.bones.remove(j);
+  void draw(){
+    if(this.bones0.size()>0){
+      for (int j=0; j < this.bones0.size();j++){
+        this.bones0.get(j).draw(this.punch_lay);
+        if(this.bones0.get(j).removebone()){
+          this.bones0.remove(j);
         }
       }
     }
+    if(this.bones1.size()>0){
+      for (int j=0; j < this.bones1.size();j++){
+        this.bones1.get(j).draw(this.punch_lay);
+        if(this.bones1.get(j).removebone()){
+          this.bones1.remove(j);
+        }
+      }
+    }
+    if(this.bones2.size()>0){
+      for (int j=0; j < this.bones2.size();j++){
+        this.bones2.get(j).draw(this.punch_lay);
+        if(this.bones2.get(j).removebone()){
+          this.bones2.remove(j);
+        }
+      }
+    }
+    punch_lay++;
   }
 }
 
@@ -58,18 +94,23 @@ class bone{
   float angle_x, angle_y, len;
   PVector start, moving;
   float angle;
-  PImage image;
+  PImage image_b, image_y;
   float scaleFactor;
   int turn_count;
   boolean exist;
+  float punch;
+  float small;
+  
 
-  bone(float x, float y, float angle_x, float angle_y, float len) {
+  bone(float x, float y, float angle_x, float angle_y, float len, float small) {
     start = new PVector(x, y);
     this.angle_x = angle_x;
     this.angle_y = angle_y;
     this.len = len;
-    this.image = loadImage("images/bone.png");
+    this.image_b = loadImage("images/CrossBone_b.png");
+    this.image_y = loadImage("images/CrossBone_y.png");
     this.exist = true;
+    this.small = small;
     angle = 0;
     scaleFactor = 1.0;
     turn_count = 0;
@@ -80,8 +121,14 @@ class bone{
   }
 
   void update() {
+    float def_turn_count = 2;
+    if(this.small==2){
+      def_turn_count = 2;
+    }else{
+      def_turn_count = 1;
+    }
     if (start.x > width || start.x<0) {
-      if(turn_count < 100){
+      if(turn_count < def_turn_count){
         angle_x *= -1;
         turn_count++;
       }
@@ -90,7 +137,7 @@ class bone{
       }
     }
     if (start.y > height || start.y<0) {
-      if(turn_count < 100){
+      if(turn_count < def_turn_count){
         angle_y *= -1;
         turn_count++;
       }else{
@@ -100,23 +147,36 @@ class bone{
     start.x += angle_x;
     start.y += angle_y;
     angle = radians(frameCount * 100);
-    scaleFactor = 0.15;
-    //scaleFactor = sin(frameCount * 0.05)*0.3 + 1.3;
+    if(this.small<100){
+      scaleFactor = 0.15;
+    }
+    else{
+      scaleFactor = sin(frameCount * 0.05)*0.3 + 1.3;
+    }
+    
   }
 
-  void display() {
+  void display(int punch_lay) {
+    float def_punch_lay=3;
+    if(this.small>=100){
+      def_punch_lay=7;
+    }
     push();
     translate(start.x, start.y);
     rotate(angle);
     scale(scaleFactor);
     imageMode(CENTER);
-    image(image, 0, 0, len, len);
+    if(punch_lay>def_punch_lay){
+      image(image_b, 0, 0, len, len);
+    }else{
+      image(image_y, 0, 0, len*2, len*2);
+    }
     pop();
   }
 
-  void draw(){
-    this.display();
+  void draw(int punch_lay){
     this.update();
+    this.display(punch_lay);
   }
 }
 
