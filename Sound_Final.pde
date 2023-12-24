@@ -14,7 +14,8 @@ void oscEvent(OscMessage myOscMessage) {
     }
   }
   if(myOscMessage.checkAddrPattern("/bone") == true) {
-
+    int value = myOscMessage.get(0).intValue();
+    bone.createBone(value);
   }
 }
 
@@ -49,7 +50,7 @@ static int i = 0;
 
 void draw() {
   background(0);
-  bone.draw(i);
+  bone.draw();
   heart.draw();
   if(i % 60 == 0) heart.createPlatform(rectPosition[0] + rectPosition[2], rectPosition[1] + rectPosition[3] - 100, -2, 50);
   if(i % 60 == 0) heart.createPlatform(rectPosition[0] - 50, rectPosition[1] + rectPosition[3] - 200, 2, 50);
