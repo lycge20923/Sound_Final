@@ -43,6 +43,21 @@ void oscEvent(OscMessage myOscMessage) {
     if(musicStart == false) {
       startTime = millis();
       musicStart = true;
+
+//********************************************************************************************* for replay
+      heart.HeartChange(State.blue);
+      heart.heartX = 100 + (width-200) / 2;
+      heart.heartY = 100 + (height-200) / 2;
+      platform_counter = 0;
+      if(replay_setting == true){
+        println("start replay");
+        setAutoPlay();
+        press_idx = 0;
+        release_idx = 0;
+        isReplay = true;
+        replay_start_time = millis();
+      }
+//*********************************************************************************************
     }
     eclispeTime = millis() - startTime;
     //println(eclispeTime);
@@ -126,9 +141,13 @@ void setup() {
   arrow = new Arrow();
   platform = new Platform(new float[]{rectPosition[0], rectPosition[0] + rectPosition[2], rectPosition[1], rectPosition[1] + rectPosition[3]});
 
+  //*********************************************** for replay
+  replay_setting = true;
+  println("ready to replay");
 }
 
 static int i = 0;
+static int platform_counter = 0;
 
 void draw() {
   background(0);
@@ -138,8 +157,21 @@ void draw() {
   obstacle.draw();
   heart.draw();
 
-  if(i % 60 == 0) platform.create(rectPosition[0] + rectPosition[2], rectPosition[1] + rectPosition[3] - 100, -2, 50);
-  if(i % 60 == 0) platform.create(rectPosition[0] - 50, rectPosition[1] + rectPosition[3] - 200, 2, 50);
+  if(isReplay == true){
+    replay();
+  }
+
+  if(heart.state == State.blue){
+    if(platform_counter % 60 == 0) platform.create(rectPosition[0] - 60, rectPosition[1] + rectPosition[3] - 100, 2, 60);
+  }
+  platform_counter++;
+  if(15000 <= eclispeTime && eclispeTime < 15500 && heart.state == State.blue){
+    heart.HeartChange(State.red);
+  }
+  if(heart.state == State.red && 136000 <= eclispeTime){
+    heart.HeartChange(State.blue);
+  }
+
   i++;
 
   gasterBlasterManager.draw();
@@ -173,9 +205,16 @@ void keyPressed() {
     if(key == 'b') {
       heart.HeartChange(State.blue);    
     }
-    int time = 10;
-    // press 1~9
-    heart.move(int(key) - '0', time);
+    if(key == 'p') {
+      if(replay_setting == true){
+        println("close auto replay");
+        replay_setting = false;
+      }
+      if(replay_setting == false){
+        println("close auto replay");
+        replay_setting = true;
+      }
+    }
   }
 }
 
