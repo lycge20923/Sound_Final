@@ -1,9 +1,15 @@
+import oscP5.*;
+import netP5.*;
+
 Heart heart; // Heart 物件 (控制 redHeart)
 enum State {
   red, blue
 }
 
+OscP5 oscp5;
+
 Platform platform; // 平台管控
+Obstacles obstacle; // 障礙物管控
 
 float[] rectPosition;
 
@@ -12,7 +18,38 @@ boolean rightKeyPressed = false;
 boolean upKeyPressed = false;
 boolean downKeyPressed = false;
 
+int startTime, eclispeTime;
+boolean musicStart = false;
+
+void oscEvent(OscMessage myOscMessage) {
+  if(myOscMessage.checkAddrPattern("/duck") == true) {
+    int value = myOscMessage.get(0).intValue();
+    if(value == 1) {
+      heart.HeartChange(State.red);
+    }
+    else if(value == 2) {
+      heart.HeartChange(State.blue);
+    }
+  }
+
+  // 90 ~ 120 s
+  if(myOscMessage.checkAddrPattern("/overdriven") == true) {
+    // interpolation (50 ~ 100)
+    if(musicStart == false) {
+      startTime = millis();
+      musicStart = true;
+    }
+    eclispeTime = millis() - startTime;
+    println(eclispeTime);
+    int mode = (eclispeTime > 70000 && eclispeTime < 120000) ? 2 : 1;
+    float freq = (myOscMessage.get(0).intValue() - 70) / 16.0 * 50.0 + 50;
+    // obstacle.getFreq(freq);
+    obstacle.create(freq, mode);
+  }
+}
+
 void setup() {
+  oscp5 = new OscP5(this, 9999);
   // 背景
   size(600, 500);
   background(0);
@@ -22,6 +59,7 @@ void setup() {
   
   heart = new Heart();
   platform = new Platform(new float[]{rectPosition[0], rectPosition[0] + rectPosition[2], rectPosition[1], rectPosition[1] + rectPosition[3]});
+  obstacle = new Obstacles(rectPosition);
 }
 
 static int i = 0;
@@ -32,11 +70,14 @@ void draw() {
   heart.draw();
   platform.draw(heart);
 
+  obstacle.draw();
+
   if(i % 60 == 0) platform.create(rectPosition[0] + rectPosition[2], rectPosition[1] + rectPosition[3] - 100, -2, 50);
   if(i % 60 == 0) platform.create(rectPosition[0] - 50, rectPosition[1] + rectPosition[3] - 200, 2, 50);
   i++;
   
   // 白框(設定填充色為透明，邊框色為白色)
+  rectMode(CORNER);
   fill(color(255, 255, 255, 0));
   stroke(255);
   strokeWeight(5); // 邊框粗細
