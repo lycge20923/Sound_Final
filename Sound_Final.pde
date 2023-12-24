@@ -1,6 +1,7 @@
 import oscP5.*;
 import netP5.*;
 
+
 OscP5 oscp5;
 
 void oscEvent(OscMessage myOscMessage) {
@@ -17,14 +18,31 @@ void oscEvent(OscMessage myOscMessage) {
     int value = myOscMessage.get(0).intValue();
     bone.createBone(value);
   }
+  if(myOscMessage.checkAddrPattern("/overdriven") == true) {
+    // interpolation (50 ~ 100)
+    if(musicStart == false) {
+      startTime = millis();
+      musicStart = true;
+    }
+    eclispeTime = millis() - startTime;
+    println(eclispeTime);
+    int mode = (eclispeTime > 70000 && eclispeTime < 120000) ? 2 : 1;
+    float freq = (myOscMessage.get(0).intValue() - 70) / 16.0 * 50.0 + 50;
+    // obstacle.getFreq(freq);
+    obstacle.create(freq, mode);
+  }
 }
-
 
 Heart heart; // Heart 物件 (控制 redHeart)
 Bones bone; // 宣告一個Bones物件
+Platform platform; // 平台管控
+Obstacles obstacle; // 障礙物管控
 enum State {
   red, blue
 }
+
+int startTime, eclispeTime;
+boolean musicStart = false;
 
 float[] rectPosition;
 
@@ -32,6 +50,22 @@ boolean leftKeyPressed = false;
 boolean rightKeyPressed = false;
 boolean upKeyPressed = false;
 boolean downKeyPressed = false;
+
+
+void oscEvent(OscMessage myOscMessage) {
+  if(myOscMessage.checkAddrPattern("/duck") == true) {
+    int value = myOscMessage.get(0).intValue();
+    if(value == 1) {
+      heart.HeartChange(State.red);
+    }
+    else if(value == 2) {
+      heart.HeartChange(State.blue);
+    }
+  }
+
+  // 90 ~ 120 s
+
+}
 
 void setup() {
   oscp5 = new OscP5(this, 9999);
@@ -42,8 +76,11 @@ void setup() {
   // 白框位址、大小 [左上x, 左上y, 寬, 高]
   rectPosition = new float[]{100, 100, width-200, height-200};
   heart = new Heart();
+
   bone = new Bones();
   bone.setup();
+  platform = new Platform(new float[]{rectPosition[0], rectPosition[0] + rectPosition[2], rectPosition[1], rectPosition[1] + rectPosition[3]});
+  obstacle = new Obstacles(rectPosition);
 }
 
 static int i = 0;
@@ -52,11 +89,17 @@ void draw() {
   background(0);
   bone.draw();
   heart.draw();
-  if(i % 60 == 0) heart.createPlatform(rectPosition[0] + rectPosition[2], rectPosition[1] + rectPosition[3] - 100, -2, 50);
-  if(i % 60 == 0) heart.createPlatform(rectPosition[0] - 50, rectPosition[1] + rectPosition[3] - 200, 2, 50);
+
+  platform.draw(heart);
+
+  obstacle.draw();
+
+  if(i % 60 == 0) platform.create(rectPosition[0] + rectPosition[2], rectPosition[1] + rectPosition[3] - 100, -2, 50);
+  if(i % 60 == 0) platform.create(rectPosition[0] - 50, rectPosition[1] + rectPosition[3] - 200, 2, 50);
   i++;
   
   // 白框(設定填充色為透明，邊框色為白色)
+  rectMode(CORNER);
   fill(color(255, 255, 255, 0));
   stroke(255);
   strokeWeight(5); // 邊框粗細

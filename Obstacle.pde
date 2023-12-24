@@ -1,6 +1,11 @@
+import java.util.Queue;
+import java.util.ArrayDeque;
+
 class Obstacles {
-  ArrayList<obs> obstacles = new ArrayList<obs>();
+  // ArrayList<obs> obstacles = new ArrayList<obs>();
   ArrayList<customBone> customBones = new ArrayList<customBone>();
+  Queue<Integer> freq = new ArrayDeque<Integer>();
+
   public float[] boundary;
   PImage blueBone, whiteBone, whiteBoneTall;
   int next = 0, randint = int(random(50, 150)), count = 8;
@@ -18,81 +23,50 @@ class Obstacles {
     // this.blueBone.resize(0, 30);
   }
 
-  void create(PImage bone, float w, float h, int mode) {
-    obstacles.add(new obs(bone, w, h));
+  void create(float h, int mode) {
+    // obstacles.add(new obs(bone, w, h));
     customBones.add(new customBone(h, mode));
   }
 
-  void draw(int num) {
+  void getFreq(int f) {
+    this.freq.add(f);
+  }
+
+  void draw() {
     ArrayList<Integer> toRemove = new ArrayList<Integer>();
     this.next += 1;
-    if (num % 60 == 0) this.create(this.whiteBoneTall, this.whiteBoneTall.width, 60, 1);
+    // this.create(this.whiteBoneTall, this.whiteBoneTall.width, freq, 1);
     
     // random bone height
     // if (this.next % 5 == 0) {
-    //   int rand = round(random(1,2));
-    //   int coef = abs(count % 16 - 8) + 1;
-
-    //   if (rand == 1) { // white
-    //     this.create(this.whiteBone, this.whiteBone.width, 15 * coef, 1);
-    //   }
-    //   else { // blue
-    //     this.create(this.blueBone, this.blueBone.width, 60, 2);
-    //   }
+    //   int boneHeight = this.freq.size() == 0 ? 60 : this.freq.poll();
+    //   // println(freq);
+    //   this.create(boneHeight, 1);
+      
     //   this.next = 0;
-    //   this.randint = int(random(40, width / 5));
-    //   this.count += 1;
+    //   // this.randint = int(random(40, width / 5));
+    //   // this.count += 1;
     // }
     
-    for (int i = 0; i < customBones.size(); i++) {
+    for (int i = customBones.size() - 1; i >=0 ; i--) {
       customBone o = customBones.get(i);
       if (o.xleft > width || o.xright < 0) {
         toRemove.add(i);
       }
       o.move();
-      o.show(boundary);
+      o.show(boundary, i);
+      // println(o.h);
     }
-
+    // println(this.customBones.size());
     // remove exceed boundary obstacles
-    for(int i = toRemove.size() - 1; i >= 0; i--) {
-      obstacles.remove(toRemove.get(i));
-      customBones.remove(toRemove.get(i));
+    for(int idx : toRemove) {
+      this.customBones.remove(idx);
     }
-  }
-}
-
-class obs {
-  float xleft, xright, y, w, h;
-  float speed = 3;
-  PImage bone;
-  
-  // 建構子
-
-  public obs(PImage bone, float w, float h) {
-    this.bone = bone;
-    this.w = w;
-    this.h = h;
-    this.xleft = 0;
-    this.xright = width;
-    this.y = height - 100 - this.h / 2;
-  }
-
-  // 移動
-  void move() {
-    // xleft += speed;
-    this.xright -= this.speed;
-  }
-
-  // 顯示
-  void show(float[] boundary) {
-    image(this.bone, this.xright, this.y, this.w, this.h);
-    float upperH = abs(this.bone.height * 8 * 0.15 - this.h);
-    image(this.bone, this.xright, boundary[1] + upperH/2, this.w, upperH);
   }
 }
 
 class customBone {
-  float xleft, xright, y, w, h;
+  float xleft, xright, y, w, h, upy;
   float speed = 3;
   int mode;
   PImage boneWhiteBot, boneWhiteTop, boneBlueBot, boneBlueTop;
@@ -110,7 +84,8 @@ class customBone {
     this.h = h;
     this.xleft = 0;
     this.xright = width;
-    this.y = height - 100 - this.h / 2;
+    this.y = height - 100 - this.h / 2 - this.boneWhiteBot.height / 2;
+    this.upy = 100 + this.h / 2 + this.boneWhiteTop.height / 2;
   }
 
   // 移動
@@ -119,26 +94,29 @@ class customBone {
   }
 
   // 顯示
-  void show(float[] boundary) {
+  void show(float[] boundary, int i) {
     // mode 1 : white, mode 2 : blue
+    float bonePos = (this.xright > width - 10) ? this.y + this.h / 2 : this.y;
+    rectMode(CENTER);
+
     if (this.mode == 1){
       fill(color(255, 255, 255));
-      rect(this.xright, this.y, 6, this.h);
-      rectMode(CENTER);
-      image(this.boneWhiteBot, this.xright, this.y + this.h / 2);
-      image(this.boneWhiteTop, this.xright, this.y - this.h / 2);
+      rect(this.xright, bonePos, 6, this.h);
+      image(this.boneWhiteBot, this.xright, bonePos + this.h / 2);
+      image(this.boneWhiteTop, this.xright, bonePos - this.h / 2);
+
+      // float reverseH = (150 - this.h);
+      // this.upy = 100 + reverseH / 2 + this.boneWhiteTop.height / 2;
+      // fill(color(255, 255, 255));
+      // rect(this.xright, this.upy, 6, reverseH);
+      // image(this.boneWhiteBot, this.xright, this.upy + reverseH / 2);
+      // image(this.boneWhiteTop, this.xright, this.upy - reverseH / 2);
     }
     else if (this.mode == 2) {
-      fill(color(84, 205, 240));
-      rect(this.xright, this.y, 6, this.h);
-      rectMode(CENTER);
-      image(this.boneBlueBot, this.xright, this.y + this.h / 2);
-      image(this.boneBlueTop, this.xright, this.y - this.h / 2);
+      fill(color(64, 254, 254));
+      rect(this.xright, bonePos, 6, this.h);
+      image(this.boneBlueBot, this.xright, bonePos + this.h / 2);
+      image(this.boneBlueTop, this.xright, bonePos - this.h / 2);
     }
-      
-
-    // image(this.bone, this.xright, this.y, this.w, this.h);
-    // float upperH = abs(this.bone.height * 8 * 0.15 - this.h);
-    // image(this.bone, this.xright, boundary[1] + upperH/2, this.w, upperH);
   }
 }
