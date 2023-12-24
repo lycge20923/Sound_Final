@@ -1,4 +1,4 @@
-#N canvas 634 53 723 601 12;
+#N canvas 668 -1270 1294 775 12;
 #X obj 266 76 Electric_Guitar;
 #X obj 107 14 bng 19 250 50 0 start_all_final empty empty 0 -10 0 12 #fcfcfc #000000 #000000;
 #X obj 261 15 bng 19 250 50 0 stopbuttom empty empty 0 -10 0 12 #fcfcfc #000000 #000000;
@@ -49,6 +49,12 @@
 #X obj 504 450 bng 19 250 50 0 empty stopbuttom empty 0 -10 0 12 #fcfcfc #000000 #000000;
 #X msg 501 483 send /gb_stop;
 #X msg 681 394 send /gb_lf;
+#X obj 669 456 bng 19 250 50 0 empty signal_Bone0 empty 0 -10 0 12 #fcfcfc #000000 #000000;
+#X obj 669 502 bng 19 250 50 0 empty signal_Bone1 empty 0 -10 0 12 #fcfcfc #000000 #000000;
+#X msg 669 480 send /bone 0;
+#X msg 669 530 send /bone 1;
+#X obj 672 558 bng 19 250 50 0 empty signal_Bone2 empty 0 -10 0 12 #fcfcfc #000000 #000000;
+#X msg 672 586 send /bone 2;
 #X connect 0 0 28 0;
 #X connect 3 0 28 0;
 #X connect 4 0 28 0;
@@ -89,3 +95,9 @@
 #X connect 47 0 48 0;
 #X connect 48 0 37 0;
 #X connect 49 0 37 0;
+#X connect 50 0 52 0;
+#X connect 51 0 53 0;
+#X connect 52 0 37 0;
+#X connect 53 0 37 0;
+#X connect 54 0 55 0;
+#X connect 55 0 37 0;

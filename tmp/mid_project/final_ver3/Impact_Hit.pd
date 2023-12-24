@@ -1,4 +1,4 @@
-#N canvas 2167 96 1581 817 12;
+#N canvas 0 35 1352 762 12;
 #N canvas 723 173 892 662 tables 0;
 #N canvas 562 235 539 278 (subpatch) 0;
 #X array ihB3 40000 float 3;
@@ -326,6 +326,7 @@
 #X obj 130 604 *~ 2;
 #X msg 155 509 2;
 #X obj 123 659 outlet~;
+#X obj 49 178 bng 19 250 50 0 impact_hit empty empty 0 -10 0 12 #fcfcfc #000000 #000000;
 #X connect 1 0 31 0;
 #X connect 1 0 33 0;
 #X connect 1 0 44 0;
@@ -362,6 +363,7 @@
 #X connect 32 5 5 0;
 #X connect 32 6 6 0;
 #X connect 33 0 32 0;
+#X connect 33 0 46 0;
 #X connect 34 0 23 0;
 #X connect 34 1 24 0;
 #X connect 34 2 25 0;

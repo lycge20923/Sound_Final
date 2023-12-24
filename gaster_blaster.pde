@@ -31,10 +31,10 @@ class GasterBlasterManager {
     }
     
     void draw() {
-        print(i-startTime);
-        print('\n');
+        //print(i-startTime);
+        //print('\n');
         if (i-startTime > 800 && i-startTime < 1800 && attackCount > 0 && attack == LEFTRIGHT){
-            attackCount -= 1;
+            attackCount -= 3;
             float rand = random(1);
             float startX = (rand < 0.5) ? 0 : width;
             float startY = -100; // 起始 Y 坐標在畫面上方

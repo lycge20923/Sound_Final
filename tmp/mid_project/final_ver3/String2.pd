@@ -1,4 +1,4 @@
-#N canvas 897 85 849 699 12;
+#N canvas 503 85 849 699 12;
 #X msg 438 27 stop;
 #X obj 369 130 unpack;
 #X floatatom 367 162 5 0 0 0 - - - 0;
@@ -96,6 +96,7 @@
 #X msg 503 505 0;
 #X msg 230 88 0.4;
 #X obj 438 567 outlet~;
+#X obj 114 145 bng 19 250 50 0 string empty empty 0 -10 0 12 #fcfcfc #000000 #000000;
 #X connect 0 0 17 0;
 #X connect 0 0 31 0;
 #X connect 0 0 37 0;
@@ -135,6 +136,7 @@
 #X connect 27 0 28 0;
 #X connect 27 1 23 1;
 #X connect 31 0 34 0;
+#X connect 31 0 43 0;
 #X connect 32 0 31 0;
 #X connect 32 0 36 0;
 #X connect 32 0 40 0;

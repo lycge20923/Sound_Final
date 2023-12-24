@@ -3,6 +3,10 @@ import netP5.*;
 
 
 OscP5 oscp5;
+boolean arrowAttack = false;
+int arrowSide = 0;
+float arrowSize;
+
 
 void oscEvent(OscMessage myOscMessage) {
   if(myOscMessage.checkAddrPattern("/duck") == true) {
@@ -41,11 +45,47 @@ void oscEvent(OscMessage myOscMessage) {
       musicStart = true;
     }
     eclispeTime = millis() - startTime;
-    println(eclispeTime);
+    //println(eclispeTime);
     int mode = (eclispeTime > 70000 && eclispeTime < 120000) ? 2 : 1;
     float freq = (myOscMessage.get(0).intValue() - 70) / 16.0 * 50.0 + 50;
     // obstacle.getFreq(freq);
     obstacle.create(freq, mode);
+  }
+  if(myOscMessage.checkAddrPattern("/sw1") == true) {
+    int sw1 = myOscMessage.get(0).intValue();
+    if(sw1 > 0) arrowAttack = true;
+  }
+  if(myOscMessage.checkAddrPattern("/sw2") == true) {
+    int sw2 = myOscMessage.get(0).intValue();
+    // print(sw2);
+    switch (sw2) {
+      case 0:
+        arrowSide = 0;
+        break;
+      case 1:
+        arrowSide = 1;
+        break;
+      case 2:
+        arrowSide = 2;
+        break;
+      case 3:
+        arrowSide = 3;
+        break;
+      case 4:
+        //arrowSide = (random(2) < 1) ? 1 : 3;
+        arrowSide = int(random(4));
+        break;
+      case 5:
+        arrowSide = int(random(4));
+        break;
+      default:
+        arrowSide = int(random(4));
+        break;
+      }
+  }
+  if(myOscMessage.checkAddrPattern("/sw3") == true) {
+    float sw3 = myOscMessage.get(0).intValue();
+    arrowSize = sw3 * sw3 / 10000.0 * 1.2;
   }
 }
 
@@ -53,6 +93,7 @@ Heart heart; // Heart 物件 (控制 redHeart)
 Bones bone; // 宣告一個Bones物件
 Platform platform; // 平台管控
 Obstacles obstacle; // 障礙物管控
+Arrow arrow;
 enum State {
   red, blue
 }
@@ -67,22 +108,6 @@ boolean rightKeyPressed = false;
 boolean upKeyPressed = false;
 boolean downKeyPressed = false;
 
-
-void oscEvent(OscMessage myOscMessage) {
-  if(myOscMessage.checkAddrPattern("/duck") == true) {
-    int value = myOscMessage.get(0).intValue();
-    if(value == 1) {
-      heart.HeartChange(State.red);
-    }
-    else if(value == 2) {
-      heart.HeartChange(State.blue);
-    }
-  }
-
-  // 90 ~ 120 s
-
-}
-
 void setup() {
   oscp5 = new OscP5(this, 9999);
   // 背景
@@ -96,26 +121,30 @@ void setup() {
 
   bone = new Bones();
   bone.setup();
-  platform = new Platform(new float[]{rectPosition[0], rectPosition[0] + rectPosition[2], rectPosition[1], rectPosition[1] + rectPosition[3]});
   obstacle = new Obstacles(rectPosition);
+  arrow = new Arrow();
+  platform = new Platform(new float[]{rectPosition[0], rectPosition[0] + rectPosition[2], rectPosition[1], rectPosition[1] + rectPosition[3]});
+
 }
 
 static int i = 0;
 
 void draw() {
   background(0);
+  platform.draw(heart);
   bone.draw();
   heart.draw();
-
-  platform.draw(heart);
-
   obstacle.draw();
-
+  
   if(i % 60 == 0) platform.create(rectPosition[0] + rectPosition[2], rectPosition[1] + rectPosition[3] - 100, -2, 50);
   if(i % 60 == 0) platform.create(rectPosition[0] - 50, rectPosition[1] + rectPosition[3] - 200, 2, 50);
   i++;
   gasterBlasterManager.draw();
-  
+  arrow.draw();
+  if (arrowAttack) {
+    arrow.create(0, 0, 2, 3, arrowSize, 50, arrowSide); //x,y,角度,速度,大小,離框距離,發射方向
+    arrowAttack = false;
+  }
   // 白框(設定填充色為透明，邊框色為白色)
   rectMode(CORNER);
   fill(color(255, 255, 255, 0));
