@@ -1,9 +1,9 @@
 class Arrow {
     ArrayList<arr> arrows = new ArrayList<arr>();
 
-    void create(float x, float y, float angle, float speed, float size, float dist, int side) {
+    void create(float x, float y, float angle, float speed, float size, float dist, int side, Heart heart) {
         PVector outsidePoint = createOutsidePoint(rectPosition, dist, side); //指定起始：x: (rectPosition[0] - d , rectPosition[0] + rectPosition[2] + d), y: (rectPosition[1] - d , rectPosition[1] + rectPosition[3] + d)  
-        arr arrow = new arr(outsidePoint.x, outsidePoint.y, calculateAngle(outsidePoint, rectPosition), speed, size); //(起始x, 起始 y , 角度, 速度, 大小）
+        arr arrow = new arr(outsidePoint.x, outsidePoint.y, calculateAngle(outsidePoint, rectPosition, heart), speed, size); //(起始x, 起始 y , 角度, 速度, 大小）
         arrows.add(arrow);
     }
 
@@ -37,8 +37,10 @@ class Arrow {
     }
 
     // 計算箭往方框的角度
-    float calculateAngle(PVector arrowPos, float[] rectPosition) {
-        return atan2(rectPosition[1]+ rectPosition[3] / 2 - arrowPos.y, rectPosition[0]+ rectPosition[2] / 2 - arrowPos.x);
+    float calculateAngle(PVector arrowPos, float[] rectPosition, Heart heart) {
+        // return atan2(rectPosition[1]+ rectPosition[3] / 2 - arrowPos.y, rectPosition[0]+ rectPosition[2] / 2 - arrowPos.x);
+        return atan2(heart.heartY - arrowPos.y, heart.heartX - arrowPos.x);
+
     }
 
 }

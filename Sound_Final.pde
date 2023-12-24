@@ -85,7 +85,7 @@ void oscEvent(OscMessage myOscMessage) {
   }
   if(myOscMessage.checkAddrPattern("/sw3") == true) {
     float sw3 = myOscMessage.get(0).intValue();
-    arrowSize = sw3 * sw3 / 10000.0 * 1.2;
+    arrowSize = sw3 / 100.0;
   }
 }
 
@@ -144,7 +144,7 @@ void draw() {
   gasterBlasterManager.draw();
   arrow.draw();
   if (arrowAttack) {
-    arrow.create(0, 0, 2, 3, arrowSize, 50, arrowSide); //x,y,角度,速度,大小,離框距離,發射方向
+    arrow.create(0, 0, 2, 3, arrowSize, 50, arrowSide, heart); //x,y,角度,速度,大小,離框距離,發射方向
     arrowAttack = false;
   }
   // 白框(設定填充色為透明，邊框色為白色)
