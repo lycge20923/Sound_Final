@@ -37,7 +37,7 @@
 #X obj 244 406 s connect_to_processing;
 #X obj 398 302 loadbang;
 #X msg 441 368 connect localhost 4002;
-#X obj 439 405 s connect_to_panoromix;
+#X obj 439 405 s connect_to_panoramix;
 #X connect 0 0 28 0;
 #X connect 3 0 28 0;
 #X connect 4 0 28 0;
