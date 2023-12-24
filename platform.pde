@@ -77,7 +77,7 @@ class plat {
 
         // green
         fill(color(255, 255, 255, 0));
-        stroke(0, 65, 0);
+        stroke(0, 100, 0);
         strokeWeight(1);
         rect(max(this.x, boundary[0]), this.y - this.height/2, real_width, this.height);
 
