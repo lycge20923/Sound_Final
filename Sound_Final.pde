@@ -14,6 +14,22 @@ void oscEvent(OscMessage myOscMessage) {
       heart.HeartChange(State.blue);
     }
   }
+
+  if(myOscMessage.checkAddrPattern("/gb_stop") == true){
+     gasterBlasterManager.attackMode(NONE);
+     gasterBlasterManager.startTime(Integer.MAX_VALUE);
+     gasterBlasterManager.attackCount = 0;
+  }
+  if(myOscMessage.checkAddrPattern("/gb_start") == true){
+     gasterBlasterManager.attackMode(NONE);
+     gasterBlasterManager.startTime(i);
+  }
+  if(myOscMessage.checkAddrPattern("/gb_lf") == true){
+     gasterBlasterManager.attackMode(LEFTRIGHT);
+  }
+  if(myOscMessage.checkAddrPattern("/gb_rd") == true){
+     gasterBlasterManager.attackMode(RANDOM);
+  }
   if(myOscMessage.checkAddrPattern("/bone") == true) {
     int value = myOscMessage.get(0).intValue();
     bone.createBone(value);
@@ -75,6 +91,7 @@ void setup() {
   
   // 白框位址、大小 [左上x, 左上y, 寬, 高]
   rectPosition = new float[]{100, 100, width-200, height-200};
+  gasterBlasterManager = new GasterBlasterManager();
   heart = new Heart();
 
   bone = new Bones();
@@ -97,6 +114,7 @@ void draw() {
   if(i % 60 == 0) platform.create(rectPosition[0] + rectPosition[2], rectPosition[1] + rectPosition[3] - 100, -2, 50);
   if(i % 60 == 0) platform.create(rectPosition[0] - 50, rectPosition[1] + rectPosition[3] - 200, 2, 50);
   i++;
+  gasterBlasterManager.draw();
   
   // 白框(設定填充色為透明，邊框色為白色)
   rectMode(CORNER);
