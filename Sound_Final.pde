@@ -2,6 +2,10 @@ import oscP5.*;
 import netP5.*;
 
 OscP5 oscp5;
+boolean arrowAttack = false;
+int arrowSide = 0;
+float arrowSize;
+
 
 void oscEvent(OscMessage myOscMessage) {
   if(myOscMessage.checkAddrPattern("/duck") == true) {
@@ -12,6 +16,41 @@ void oscEvent(OscMessage myOscMessage) {
     else if(value == 2) {
       heart.HeartChange(State.blue);
     }
+  }
+  if(myOscMessage.checkAddrPattern("/sw1") == true) {
+    int sw1 = myOscMessage.get(0).intValue();
+    if(sw1 > 0) arrowAttack = true;
+  }
+  if(myOscMessage.checkAddrPattern("/sw2") == true) {
+    int sw2 = myOscMessage.get(0).intValue();
+    // print(sw2);
+    switch (sw2) {
+      case 0:
+        arrowSide = 0;
+        break;
+      case 1:
+        arrowSide = 1;
+        break;
+      case 2:
+        arrowSide = 2;
+        break;
+      case 3:
+        arrowSide = 3;
+        break;
+      case 4:
+        arrowSide = (random(2) < 1) ? 1 : 3;
+        break;
+      case 5:
+        arrowSide = int(random(4));
+        break;
+      default:
+        arrowSide = int(random(4));
+        break;
+      }
+  }
+  if(myOscMessage.checkAddrPattern("/sw3") == true) {
+    float sw3 = myOscMessage.get(0).intValue();
+    arrowSize = sw3 * sw3 / 10000.0;
   }
 }
 
@@ -47,6 +86,7 @@ void setup() {
 static int i = 0;
 
 void draw() {
+  // print(arrowSide);
   background(0);
   
   heart.draw();
@@ -57,7 +97,10 @@ void draw() {
   i++;
 
   arrow.draw();
-  if (frameCount % 50 == 0) arrow.create(0, 0, 2, 3, 1, 50, int(random(4)));
+  if (arrowAttack) {
+    arrow.create(0, 0, 2, 5, arrowSize, 50, arrowSide);
+    arrowAttack = false;
+  }
   
   // 白框(設定填充色為透明，邊框色為白色)
   fill(color(255, 255, 255, 0));

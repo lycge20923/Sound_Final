@@ -13,7 +13,7 @@ class Arrow {
             arrow.update();
             arrow.display();
 
-            // 箭飛出邊界刪除
+            // 飛出邊界刪除
             if (arrow.isOutOfBounds()) {
             arrows.remove(i);
             }
@@ -54,14 +54,21 @@ class arr{
         this.speed = speed;
         this.size = size;
         this.image = loadImage("images/spear.png");
+        this.r = 0;
     }
   
     void update() {
-        this.speed += 0.2;
-        this.xSpeed = speed * cos(angle);
-        this.ySpeed = speed * sin(angle);
-        this.x += this.xSpeed;
-        this.y += this.ySpeed;
+        if(this.r < radians(360)){
+            this.angle += 0.3;
+            this.r += 0.3;
+        }
+        else{  
+            this.speed += 0.1;
+            this.xSpeed = speed * cos(angle);
+            this.ySpeed = speed * sin(angle);
+            this.x += this.xSpeed;
+            this.y += this.ySpeed;
+        }
     }
 
     void display() {
@@ -74,7 +81,7 @@ class arr{
         popMatrix();
     }
     
-    // 超出邊界刪除
+    // 邊界判斷
     boolean isOutOfBounds() {
         return x < 0 || x > width || y < 0 || y > height;
     } 
