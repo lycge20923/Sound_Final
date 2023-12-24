@@ -10,17 +10,13 @@ float[][] attack_list = {
   {600.0, -100.0, 530.0, 246.64748, 180.0, 90.0},
   {0.0, -100.0, 70.0, 170.45107, 360.0, 270.0},
   {0.0, -100.0, 70.0, 168.04109, 360.0, 270.0},
-  {0.0, -100.0, 70.0, 264.4251, 360.0, 270.0},
+  {600.0, -100.0, 530.0, 282.5943, 180.0, 90.0},
   {0.0, -100.0, 70.0, 332.54547, 360.0, 270.0},
-  {0.0, -100.0, 70.0, 172.46143, 360.0, 270.0},
-  {600.0, -100.0, 530.0, 287.52856, 180.0, 90.0},
+  {600.0, -100.0, 530.0, 222.87213, 180.0, 90.0},
   {600.0, -100.0, 530.0, 152.75122, 180.0, 90.0},
   {0.0, -100.0, 70.0, 252.23817, 360.0, 270.0},
   {0.0, -100.0, 70.0, 176.39563, 360.0, 270.0},
-  {600.0, -100.0, 530.0, 282.5943, 180.0, 90.0},
-  {0.0, -100.0, 70.0, 346.11493, 360.0, 270.0},
-  {0.0, -100.0, 70.0, 329.68054, 360.0, 270.0},
-  {0.0, -100.0, 70.0, 222.87213, 360.0, 270.0},
+  {600.0, -100.0, 530.0, 246.64748, 180.0, 90.0},
   {-64.95735, 507.8604, 129.00702, 411.04153, 290.60364, 237.94615},
   {665.396, 509.70572, 478.66827, 310.20502, 296.0711, 141.52177},
   {-34.973724, 575.7523, 231.98746, 426.2893, 37.469215, 239.00131},
@@ -62,6 +58,7 @@ float[][] attack_list = {
 };
 
 int next_attack = 0;
+long cooldown = 0;
 
 class GasterBlasterManager {
     ArrayList<GasterBlaster> gasterBlasters = new ArrayList<GasterBlaster>();
@@ -69,19 +66,30 @@ class GasterBlasterManager {
     float attackAngle = 0; 
     float vectorX, vectorY;
     int attackCount = 0;
-    int startTime = Integer.MAX_VALUE;
+    long startTime = Long.MAX_VALUE;
     
-    void startTime(int time) {
-        this.startTime = time;
+    void startTime(long time) {
+        if (time > 600000) this.startTime = Integer.MAX_VALUE;
+        else this.startTime = millis();
         next_attack = 0;
+        cooldown = 0;
         this.attackCount = 0;
     }
     
     void attackMode(int mode){
         attack = mode;
-        if (attack == LEFTRIGHT && i-startTime > 800 && i-startTime < 1800) attackCount += 1;
-        if (attack == RANDOM && i-startTime > 4600 && i-startTime < 6300) attackCount += 1;
-        if (i-startTime > 6550 && i-startTime < 8000) attackCount += 1;
+        if (attack == LEFTRIGHT && millis()-startTime > 15900 && millis()-startTime < 32100) {
+          if(millis() - cooldown > 200){
+              this.attackCount += 1;
+              cooldown = millis();
+          }
+        }
+        if (attack == RANDOM && millis()-startTime > 79900 && millis()-startTime < 112100) {
+            if(millis() - cooldown > 200){
+              this.attackCount += 1;
+              cooldown = millis();
+            }
+        }
     }
     
     void create(float startX, float startY, float targetX, float targetY, float startAngle, float endAngle){
@@ -90,11 +98,12 @@ class GasterBlasterManager {
     }
     
     void draw() {
+        //print(millis() - this.startTime + "\n");
         //print(i-startTime);
         //print('\n');
-        if(i-startTime < 100) this.attackAngle = 0;
-        if (i-startTime > 800 && i-startTime < 1800 && attackCount > 0 && attack == LEFTRIGHT){
-            attackCount -= 3;
+        if (millis()-startTime < 1000) this.attackAngle = 0;
+        if (millis()-startTime > 15900 && millis()-startTime < 32100 && attackCount > 0 && attack == LEFTRIGHT){
+            this.attackCount = 0;
             //float rand = random(1);
             //float startX = (rand < 0.5) ? 0 : width;
             //float startY = -100; // 起始 Y 坐標在畫面上方
@@ -108,8 +117,8 @@ class GasterBlasterManager {
             next_attack += 1;
             //this.create(startX, startY, targetX, targetY, startAngle, endAngle); 
         }
-        else if (i-startTime > 4800 && i-startTime < 6300 && attackCount > 0 && attack == RANDOM){
-            attackCount = 0;
+        else if (millis()-startTime > 78000 && millis()-startTime < 109000 && attackCount > 0 && attack == RANDOM){
+            this.attackCount = 0;
             //float startX = (random(1) < 0.5) ? -random(100) : random(100)+width;
             //float startY = (random(1) < 0.5) ? -random(100) : random(100)+height; // 起始 Y 坐標在畫面上方
             //float targetX = random(width/3) + width/3;
@@ -137,10 +146,10 @@ class GasterBlasterManager {
             // this.create(startX, startY, targetX, targetY, startAngle, endAngle);
             this.create(attack_list[next_attack][0], attack_list[next_attack][1], attack_list[next_attack][2], attack_list[next_attack][3], attack_list[next_attack][4], attack_list[next_attack][5]);
             next_attack += 1;
-            print(attackCount + " " + next_attack+"\n");
         }
-        else if (i-startTime > 6700 && i-startTime < 8000){
-            if((i-startTime) %5 == 0){
+        else if (millis()-startTime > 112000 && millis()-startTime < 134100){
+            if((i-startTime) % 5 == 0){
+                print(i-startTime + "\n");
                 this.attackAngle = (this.attackAngle + 10) % 360;
                 this.vectorX = PVector.fromAngle(radians(this.attackAngle)).y;
                 this.vectorY = PVector.fromAngle(radians(this.attackAngle)).x;
