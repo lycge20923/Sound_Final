@@ -1,4 +1,4 @@
-#N canvas -119 -934 1294 765 12;
+#N canvas 362 129 1294 765 12;
 #X obj 266 76 Electric_Guitar;
 #X obj 107 14 bng 19 250 50 0 start_all_final empty empty 0 -10 0 12 #fcfcfc #000000 #000000;
 #X obj 261 15 bng 19 250 50 0 stopbuttom empty empty 0 -10 0 12 #fcfcfc #000000 #000000;
@@ -33,11 +33,13 @@
 #X obj 471 256 dac~ 4;
 #X obj 600 258 dac~ 5;
 #X obj 803 258 dac~ 6;
-#X msg 257 362 connect localhost 9999;
-#X obj 244 406 s connect_to_processing;
-#X obj 398 302 loadbang;
+#X msg 244 368 connect localhost 9999;
+#X obj 244 400 s connect_to_processing;
+#X obj 244 305 loadbang;
 #X msg 441 368 connect localhost 4002;
-#X obj 439 405 s connect_to_panoramix;
+#X obj 441 400 s connect_to_panoramix;
+#X msg 382 307 disconnect;
+#X obj 244 333 bng 19 250 50 0 empty empty empty 0 -10 0 12 #fcfcfc #000000 #000000;
 #X connect 0 0 28 0;
 #X connect 3 0 28 0;
 #X connect 4 0 28 0;
@@ -64,6 +66,9 @@
 #X connect 26 0 12 0;
 #X connect 27 0 13 0;
 #X connect 34 0 35 0;
-#X connect 36 0 34 0;
-#X connect 36 0 37 0;
+#X connect 36 0 40 0;
 #X connect 37 0 38 0;
+#X connect 39 0 35 0;
+#X connect 39 0 38 0;
+#X connect 40 0 34 0;
+#X connect 40 0 37 0;
