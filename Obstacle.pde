@@ -92,6 +92,9 @@ class customBone {
 
   // 顯示
   void show(float[] boundary) {
+    fill(color(255, 255, 255, 0));
+    stroke(180);
+    strokeWeight(1);
     // mode 1 : white, mode 2 : blue
     float bonePos = (this.xright > width - 10) ? this.y + this.h / 2 : this.y;
 
