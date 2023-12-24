@@ -46,6 +46,7 @@ class Arrow {
 class arr{
     float x, y, angle, speed, size, bodyLength, xSpeed, ySpeed, r;
     PImage image;
+    color arrowColor;
 
     arr(float x, float y, float angle, float speed, float size) {
         this.x = x;
@@ -55,10 +56,13 @@ class arr{
         this.size = size;
         this.image = loadImage("images/spear.png");
         this.r = 0;
+        this.arrowColor = color(255,255,255);
     }
   
     void update() {
         if(this.r < radians(360)){
+            if(this.r < radians(90)) this.arrowColor = color(0,255,128);
+            else this.arrowColor = color(255,255,255);
             this.angle += 0.3;
             this.r += 0.3;
         }
@@ -76,6 +80,7 @@ class arr{
         translate(x, y);
         rotate(angle);
         scale(size);
+        tint(this.arrowColor);
         imageMode(CENTER);
         image(image, 0, 0);
         popMatrix();
