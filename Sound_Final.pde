@@ -131,14 +131,16 @@ static int i = 0;
 
 void draw() {
   background(0);
-  platform.draw(heart);
-  bone.draw();
-  heart.draw();
-  obstacle.draw();
   
+  bone.draw();
+  obstacle.draw();
+  platform.draw(heart);
+  heart.draw();
+
   if(i % 60 == 0) platform.create(rectPosition[0] + rectPosition[2], rectPosition[1] + rectPosition[3] - 100, -2, 50);
   if(i % 60 == 0) platform.create(rectPosition[0] - 50, rectPosition[1] + rectPosition[3] - 200, 2, 50);
   i++;
+
   gasterBlasterManager.draw();
   arrow.draw();
   if (arrowAttack) {
@@ -206,8 +208,6 @@ class Heart {
   float initial_velocity = -9;
   float velocity = 0;
   float pre_heartY;
-
-  Platform platform;
   
   // 邊界判斷 [x_min, x_max, y_min, y_max]
   float[] boundary = new float[4];
@@ -235,7 +235,6 @@ class Heart {
                                 rectPosition[0] + rectPosition[2] - this.heartSize / 2 - 2,
                                 rectPosition[1] + this.heartSize / 2 + 3,
                                 rectPosition[1] + rectPosition[3] - this.heartSize / 2 - 2};
-    this.platform = new Platform(new float[]{rectPosition[0], rectPosition[0] + rectPosition[2], rectPosition[1], rectPosition[1] + rectPosition[3]});
   }
 
   // 邊界檢查
@@ -364,13 +363,8 @@ class Heart {
     }
   }
 
-  void createPlatform(float plat_x, float plat_y, float plat_speed, float plat_width){
-    platform.create(plat_x, plat_y, plat_speed, plat_width);
-  }
-
   // 繪製愛心
   void draw() {
-    platform.draw(this);
     imageMode(CENTER);
     image(this.currHeart, this.heartX, this.heartY);
     HeartBehavior();
