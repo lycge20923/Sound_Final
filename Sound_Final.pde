@@ -133,8 +133,8 @@ void draw() {
   background(0);
   
   bone.draw();
-  obstacle.draw();
   platform.draw(heart);
+  obstacle.draw();
   heart.draw();
 
   if(i % 60 == 0) platform.create(rectPosition[0] + rectPosition[2], rectPosition[1] + rectPosition[3] - 100, -2, 50);
